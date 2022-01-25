@@ -1,4 +1,3 @@
-import { FilterQuery } from "mongoose";
 import { omit } from "lodash";
 import User, { ICreateUserInput } from "../models/user.model";
 
