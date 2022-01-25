@@ -20,7 +20,7 @@ describe('createUser', () => {
     password: "Password123",
   }
 
-  it('should resolve with true and valid userId', async () => {
+  it('successfully creates new user', async () => {
     await expect(createUser(userInput)).resolves.toEqual({
       _id: expect.anything(),
       email: userInput.email,
@@ -30,10 +30,20 @@ describe('createUser', () => {
       __v: 0,
     })
   })
+
+  it('throws error if user already exists', async () => {
+    const dummy = await createDummyUser()
+    const duplicateInput = {
+      username: dummy.username,
+      email: dummy.email,
+      password: dummy.password,
+    }
+    await expect(createUser(duplicateInput)).rejects.toEqual(new Error(`${dummy.email} already exists`))
+  })
 })
 
 describe('verifyCredentials', () => {
-  it('should return JWT token, userId, expireAt to a valid login/password', async () => {
+  it('successfully authenticates user login', async () => {
     const dummy = await createDummyUser()
     await expect(verifyCredentials({ email: dummy.email, password: dummy.password })).resolves.toEqual({
       _id: dummy._id,
@@ -45,14 +55,14 @@ describe('verifyCredentials', () => {
     })
   })
 
-  it('should reject with error if login does not exist', async () => {
+  it('rejects login with wrong credentials', async () => {
     const dummy = await createDummyUser()
     await expect(verifyCredentials(
       { email: dummy.email, password: 'random' }
     )).resolves.toEqual(false)
   })
 
-  it('should reject with error if password is wrong', async () => {
+  it('rejects login if email does not exist', async () => {
     await expect(verifyCredentials(
       { email: 'test@email.com', password: 'test1234' }
     )).resolves.toEqual(false)

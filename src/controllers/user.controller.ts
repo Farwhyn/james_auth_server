@@ -11,6 +11,11 @@ export async function createUserHandler(
     return res.send(user);
   } catch (error: any) {
     console.error(error)
-    return res.status(409).send(error.message)
+    return res.status(409).send({
+      error: {
+        type: 'user_already_exists', 
+        message: error.message
+      }
+    })
   }
 }

@@ -15,7 +15,7 @@ export async function loginHandler(req: Request, res: Response) {
     return res.status(401).send("Invalid login information");
   }
 
-  const session = await createSession(user._id);
+  const session = await createSession(user.email);
 
   const accessToken = signToken(
     { ...user, session: session._id },
@@ -26,12 +26,12 @@ export async function loginHandler(req: Request, res: Response) {
 }
 
 export async function getSessionsHandler(req: Request, res: Response) {
-  const sessions = await getAllSessionsForUser({ userId: res.locals.user._id, active: true });
+  const sessions = await getAllSessionsForUser(res.locals.user.email);
   return res.send(sessions);
 }
 
 export async function logoutHandler(req: Request, res: Response) {
   await updateSession({ _id: res.locals.user.session }, { active: false });
 
-  return res.send({ accessToken: null });
+  return res.send({ accessToken: null }); // hope the front-end can delete the access token from storage
 }

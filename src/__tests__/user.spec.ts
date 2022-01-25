@@ -23,7 +23,7 @@ const userInput = {
 
 const sessionPayload = {
   _id: new mongoose.Types.ObjectId().toString(),
-  userId: userId,
+  userEmail: userInput.email,
   active: true,
   createdAt: new Date("2021-09-30T13:31:07.674Z"),
   updatedAt: new Date("2021-09-30T13:31:07.674Z"),
@@ -31,8 +31,6 @@ const sessionPayload = {
 };
 
 describe("user", () => {
-  // user registration
-
   describe("user registration", () => {
     describe("given the username and password are valid", () => {
       it("should return the user payload", async () => {

@@ -12,7 +12,7 @@ export async function createUser(input: ICreateUserInput) {
 
     return omit(user.toJSON(), "password");
   } catch (error: any) {
-    throw new Error(error)
+    throw new Error(`${input.email} already exists`)
   }
 }
 

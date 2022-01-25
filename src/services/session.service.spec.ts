@@ -14,17 +14,13 @@ afterAll(async () => {
 })
 
 describe('createSession', () => {
-  const userInput = {
-    username: "james",
-    email: "test@example.com",
-    password: "Password123",
-  }
+  const testEmail = 'test@email.com'
 
   it('should resolve with true and valid userId', async () => {
-    await expect(createUser(userInput)).resolves.toEqual({
+    await expect(createSession(testEmail)).resolves.toEqual({
       _id: expect.anything(),
-      email: userInput.email,
-      username: userInput.username,
+      userEmail: testEmail,
+      active: true,
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
       __v: 0,
@@ -32,29 +28,24 @@ describe('createSession', () => {
   })
 })
 
-describe('verifyCredentials', () => {
-  it('should return JWT token, userId, expireAt to a valid login/password', async () => {
-    const dummy = await createDummy()
-    await expect(verifyCredentials({ email: dummy.email, password: dummy.password })).resolves.toEqual({
-      _id: dummy._id,
-      email: dummy.email,
-      username: dummy.username,
-      createdAt: expect.any(Date),
-      updatedAt: expect.any(Date),
-      __v: 0,
-    })
+describe('getAllSessionsForUser', () => {
+  it('returns only active sessions for a given user', async () => {
+    await expect(getAllSessionsForUser('fakeemail@email.com')).resolves.toEqual([])
   })
 
-  it('should reject with error if login does not exist', async () => {
-    const dummy = await createDummyUser()
-    await expect(verifyCredentials(
-      { email: dummy.email, password: 'random' }
-    )).resolves.toEqual(false)
-  })
-
-  it('should reject with error if password is wrong', async () => {
-    await expect(verifyCredentials(
-      { email: 'test@email.com', password: 'test1234' }
-    )).resolves.toEqual(false)
+  it('returns only active sessions for a given user', async () => {
+    const testEmail = 'newtest@email.com'
+    const session = await createActiveDummySession(testEmail)
+    const inactiveSession = await createInactiveDummySession(testEmail)
+    await expect(getAllSessionsForUser(testEmail)).resolves.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ _id: session._id}),
+      ])
+    )
+    await expect(getAllSessionsForUser(testEmail)).resolves.not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ _id: inactiveSession._id}),
+      ])
+    );
   })
 })

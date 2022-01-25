@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { IUserDocument } from "./user.model";
 
 export interface ISessionDocument extends mongoose.Document {
-  userId: IUserDocument["_id"]
+  userEmail: IUserDocument["email"]
   active: boolean
   createdAt: Date
   updatedAt: Date
@@ -10,7 +10,7 @@ export interface ISessionDocument extends mongoose.Document {
 
 const sessionSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    userEmail: { type: mongoose.Schema.Types.String, ref: "User" },
     active: { type: Boolean, default: true },
   },
   {

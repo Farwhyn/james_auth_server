@@ -1,13 +1,14 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
 import Session, { ISessionDocument } from "../models/session.model";
 
-export async function createSession(userId: string) {
-  const session = await Session.create({ userId });
+export async function createSession(email: string) {
+  const session = await Session.create({ userEmail: email });
 
   return session.toJSON();
 }
 
-export async function getAllSessionsForUser(query: FilterQuery<ISessionDocument>) {
+export async function getAllSessionsForUser(email: string) {
+  const query: FilterQuery<ISessionDocument> = { userEmail: email, active: true }
   return Session.find(query).lean();
 }
 

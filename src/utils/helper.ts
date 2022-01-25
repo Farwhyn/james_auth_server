@@ -3,7 +3,7 @@ import User from '../models/user.model'
 import Session from '../models/session.model'
 
 type DummyUser = { email: string, password: string, username: string, _id: any }
-type DummySession = { active: boolean, userId: any, _id: any }
+type DummySession = { active: boolean, userEmail: string, _id: any }
 
 export async function createDummyUser(): Promise<DummyUser> {
   const user = {
@@ -15,18 +15,20 @@ export async function createDummyUser(): Promise<DummyUser> {
   return {...user, _id: dbUser._id }
 }
 
-export async function createActiveDummySession(): Promise<DummySession> {
+export async function createActiveDummySession(email: string): Promise<DummySession> {
   const session = {
-    userId: 'test'
+    userEmail: email
   }
-  const dbSession = await User.create(session)
+  const dbSession = await Session.create(session)
   return {...session, active: true, _id: dbSession._id }
 }
 
-export async function createInactiveDummySession(): Promise<DummySession> {
+export async function createInactiveDummySession(email: string): Promise<DummySession> {
   const session = {
-    userId: 'test'
+    userEmail: email,
+    active: false
   }
-  const dbSession = await User.create(session)
-  return {...session, active: false, _id: dbSession._id }
+
+  const dbSession = await Session.create(session)
+  return {...session, _id: dbSession._id }
 }
