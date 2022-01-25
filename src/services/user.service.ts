@@ -1,8 +1,13 @@
 import { FilterQuery } from "mongoose";
 import { omit } from "lodash";
-import User, { UserDocument, UserInput } from "../models/user.model";
+import User, { IUserDocument, ICreateUserInput } from "../models/user.model";
 
-export async function createUser(input: UserInput) {
+type InputCredentialType = {
+  email: string;
+  password: string;
+};
+
+export async function createUser(input: ICreateUserInput) {
   try {
     const user = await User.create(input);
 
@@ -12,16 +17,14 @@ export async function createUser(input: UserInput) {
   }
 }
 
-export async function validatePassword({ email, password }) {
+export async function verifyCredentials({ email, password }: InputCredentialType) {
   const user = await User.findOne({ email });
-  if (!user) {
-    return false;
-  }
+  if (!user) return false
 
   const isValid = await user.comparePassword(password);
   return isValid ? omit(user.toJSON(), "password") : false
 }
 
-export async function findUser(query: FilterQuery<UserDocument>) {
+export async function getUser(query: FilterQuery<IUserDocument>) {
   return User.findOne(query).lean()
 }
