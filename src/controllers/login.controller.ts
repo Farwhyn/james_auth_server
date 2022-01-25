@@ -22,12 +22,7 @@ export async function loginHandler(req: Request, res: Response) {
     { expiresIn: '10m' }
   );
 
-  const refreshToken = signToken(
-    { ...user, session: session._id },
-    { expiresIn: '1y' }
-  );
-
-  return res.send({ accessToken, refreshToken });
+  return res.send({ accessToken });
 }
 
 export async function getSessionsHandler(req: Request, res: Response) {
@@ -36,11 +31,7 @@ export async function getSessionsHandler(req: Request, res: Response) {
 }
 
 export async function logoutHandler(req: Request, res: Response) {
-  const sessionId = res.locals.user.session;
-  await updateSession({ _id: sessionId }, { active: false });
+  await updateSession({ _id: res.locals.user.session }, { active: false });
 
-  return res.send({
-    accessToken: null,
-    refreshToken: null,
-  });
+  return res.send({ accessToken: null });
 }

@@ -1,6 +1,6 @@
 import { FilterQuery } from "mongoose";
 import { omit } from "lodash";
-import User, { IUserDocument, ICreateUserInput } from "../models/user.model";
+import User, { ICreateUserInput } from "../models/user.model";
 
 type InputCredentialType = {
   email: string;
@@ -23,8 +23,4 @@ export async function verifyCredentials({ email, password }: InputCredentialType
 
   const isValid = await user.comparePassword(password);
   return isValid ? omit(user.toJSON(), "password") : false
-}
-
-export async function getUser(query: FilterQuery<IUserDocument>) {
-  return User.findOne(query).lean()
 }
