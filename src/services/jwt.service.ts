@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import jwt, { SignOptions, VerifyErrors, VerifyOptions } from "jsonwebtoken";
 import config from "config";
 

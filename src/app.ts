@@ -6,8 +6,6 @@ import server from './utils/server'
 const port = config.get('port')
 const app = server()
 
-app.use(express.json())
-
 app.listen(port, async () => {
   console.log(`Server listening on port ${port}`)
 
