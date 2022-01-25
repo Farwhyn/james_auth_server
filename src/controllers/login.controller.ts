@@ -31,7 +31,7 @@ export async function getSessionsHandler(req: Request, res: Response) {
 }
 
 export async function logoutHandler(req: Request, res: Response) {
-  await updateSession({ _id: res.locals.user.session }, { active: false });
+  await updateSession(res.locals.user.session)
 
   return res.send({ accessToken: null }); // hope the front-end can delete the access token from storage
 }

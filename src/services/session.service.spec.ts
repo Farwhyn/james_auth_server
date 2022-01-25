@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { createSession, getAllSessionsForUser, updateSession } from './session.service'
 import { createActiveDummySession, createInactiveDummySession } from "../utils/helper";
+import Session from "../models/session.model";
 
 beforeAll(async () => {
   const mongoServer = await MongoMemoryServer.create();
@@ -47,5 +48,15 @@ describe('getAllSessionsForUser', () => {
         expect.objectContaining({ _id: inactiveSession._id}),
       ])
     );
+  })
+})
+
+describe('updateSession', () => {
+  it('should resolve with true and valid userId', async () => {
+    const testEmail = 'testupdate@email.com'
+    const activeSession = await createActiveDummySession(testEmail)
+    await updateSession(activeSession._id)
+    const updatedSession = await Session.findById(activeSession._id)
+    expect(updatedSession!.active).toBe(false)
   })
 })

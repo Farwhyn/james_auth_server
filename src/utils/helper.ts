@@ -1,9 +1,10 @@
 import faker from 'faker'
 import User from '../models/user.model'
 import Session from '../models/session.model'
+import { ObjectId } from 'mongoose'
 
-type DummyUser = { email: string, password: string, username: string, _id: any }
-type DummySession = { active: boolean, userEmail: string, _id: any }
+type DummyUser = { email: string, password: string, username: string, _id: ObjectId }
+type DummySession = { active: boolean, userEmail: string, _id: ObjectId }
 
 export async function createDummyUser(): Promise<DummyUser> {
   const user = {
