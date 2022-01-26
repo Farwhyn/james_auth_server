@@ -13,7 +13,7 @@ Clone the repo and perform the following steps
 ```sh
 cd jwt_auth_server
 yarn
-./scripts/start_mongodb_docker.sh
+./scripts/start_mongodb_docker.sh -r
 yarn dev
 ```
 
