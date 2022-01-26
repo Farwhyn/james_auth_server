@@ -21,7 +21,6 @@ export function verifyToken(token: string) {
       decoded,
     }
   } catch (e: any) {
-    console.error(e);
     return {
       valid: false,
       expired: e.message === "jwt token is expired",

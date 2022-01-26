@@ -12,7 +12,7 @@ export async function loginHandler(req: Request, res: Response) {
   const user = await verifyCredentials(req.body);
 
   if (!user) {
-    return res.status(401).send("Invalid login information");
+    return res.status(401).send({ message: "invalid login information" });
   }
 
   const session = await createSession(user.email);

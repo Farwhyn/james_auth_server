@@ -10,7 +10,6 @@ export async function createUserHandler(
     const user = await createUser(req.body)
     return res.send(user);
   } catch (error: any) {
-    console.error(error)
     return res.status(409).send({
       error: {
         type: 'user_already_exists', 

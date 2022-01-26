@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: Authenication API
+  description: User Authentication Backend API
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: jamesizhou@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: http://localhost:3000/api/v1
+ 
+tags:
+  - name: session
+    description: Session Management APIs
+  - name: user
+    description: User APIs
+
+paths:
+  /signup:
+    post:
+      summary: Create User
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - email
+                - password
+                - username
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 5
+                username:
+                  type: string
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  password:
+                    type: string
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type: 
+                        type: string
+                      message:
+                        type: string
+  /login:
+    post:
+      summary: Creates a new session for an authenticated user
+      tags:
+        - session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - accessToken
+                properties:
+                  accessToken:
+                    type: string
+                    format: '^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$'
+        401:
+          description: Invalid login information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /sessions:
+    get:
+      description: Returns a list of active sessions created by the authenticated user
+      tags: 
+        - session
+      security: 
+        - bearerAuth: []
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - accessToken
+                properties:
+                  accessToken:
+                    type: string
+                    format: '^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$'
+        403:
+          description: Invalid access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /logout:
+    get:
+      description: Deletes the current user session
+      tags: 
+        - session
+      security: 
+        - bearerAuth: []
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - accessToken
+                properties:
+                  accessToken:
+                    type: string
+                    default: null
+        403:
+          description: Invalid access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+ 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

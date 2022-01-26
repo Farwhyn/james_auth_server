@@ -6,7 +6,7 @@ import { createSessionSchema } from './schema/session.schema';
 import { createUserSchema } from './schema/user.schema';
 
 const checkUser = (req: Request, res: Response, next: NextFunction) => {
-  return res.locals.user ? next() : res.sendStatus(403);
+  return res.locals.user ? next() : res.status(403).send({ message: "token invalid" });;
 }
 
 function routes(app: Express) {
